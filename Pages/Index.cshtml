@@ -1,0 +1,247 @@
+﻿@page
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="manifest" href="/manifest.json">
+    <title>Inicio</title>
+</head>
+
+<body>
+    <main class="index">
+        <header class="header">
+            <span class="header-text">Credencial Virtual</span>
+            <svg class="header-button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24"
+                 onclick="toggleAside()" style="z-index: 5;" fill="none">
+                <path d="M4 5L20 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                <path d="M4 12L20 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+                <path d="M4 19L20 19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                      stroke-linejoin="round" />
+            </svg>
+        </header>
+        <article class="credencial">
+            <span class="credencial-leyenda">Estudiante - Vigente</span>
+            <div class="credencial-logos">
+                <img src="/assets/img/tec-1.png" alt="TecNM" width="100">
+                <img src="/assets/img/tec-2.png" alt="SEP" width="50">
+            </div>
+            <img alt="estudiante" class="credencial-foto" style="max-width: 100%">
+            <span class="credencial-nocontrol"></span>
+            <span class="credencial-nombre"></span>
+            <span class="credencial-carrera">Ing. Sistemas Computacionales</span>
+            <div class="credencial-info info-nss">
+                NSS - <span class="credencial-dato dato-nss"></span>
+            </div>
+            <div class="credencial-info info-curp">
+                CURP - <span class="credencial-dato dato-curp"></span>
+            </div>
+            <div class="credencial-info info-periodo">
+                Periodo - <span class="credencial-dato dato-periodo"></span>
+            </div>
+            <img src="/assets/qr.png" alt="QR" class="credencial-qr" width="200" style="z-index: 2;">
+            <span class="indicacion qr">Presiona para agrandar</span>
+        </article>
+    </main>
+    <aside class="aside">
+        <svg class="aside-close" style="z-index: 5;" onclick="toggleAside()" xmlns="http://www.w3.org/2000/svg"
+             width="32" height="32" viewBox="0 0 24 24">
+            <path fill="none" stroke="currentColor" stroke-dasharray="12" stroke-dashoffset="12" stroke-linecap="round"
+                  stroke-linejoin="round" stroke-width="2" d="M12 12l7 7M12 12l-7 -7M12 12l-7 7M12 12l7 -7">
+                <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.3s" values="12;0" />
+            </path>
+        </svg>
+        <ul class="menu">
+            <li class="menu-item">
+                <a href="https://intertec.tec-carbonifera.edu.mx/" target="_blank">
+                    Mis calificaciones
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32"
+                         height="32" viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-dasharray="28" stroke-dashoffset="28"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 6l2 -2c1 -1 3 -1 4 0l1 1c1 1 1 3 0 4l-5 5c-1 1 -3 1 -4 0M11 18l-2 2c-1 1 -3 1 -4 0l-1 -1c-1 -1 -1 -3 0 -4l5 -5c1 -1 3 -1 4 0">
+                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="28;0" />
+                        </path>
+                    </svg>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="https://www.itesrc.edu.mx/" target="_blank">
+                    Sitio web
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                         viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-dasharray="28" stroke-dashoffset="28"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 6l2 -2c1 -1 3 -1 4 0l1 1c1 1 1 3 0 4l-5 5c-1 1 -3 1 -4 0M11 18l-2 2c-1 1 -3 1 -4 0l-1 -1c-1 -1 -1 -3 0 -4l5 -5c1 -1 3 -1 4 0">
+                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="28;0" />
+                        </path>
+                    </svg>
+                </a>
+            </li>
+            <li class="menu-item">
+                <a href="https://www.facebook.com/tecnm.carbonifera?mibextid=ZbWKwL" target="_blank">
+                    Facebook
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32"
+                         viewBox="0 0 24 24">
+                        <path fill="none" stroke="currentColor" stroke-dasharray="28" stroke-dashoffset="28"
+                              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M13 6l2 -2c1 -1 3 -1 4 0l1 1c1 1 1 3 0 4l-5 5c-1 1 -3 1 -4 0M11 18l-2 2c-1 1 -3 1 -4 0l-1 -1c-1 -1 -1 -3 0 -4l5 -5c1 -1 3 -1 4 0">
+                            <animate fill="freeze" attributeName="stroke-dashoffset" dur="0.6s" values="28;0" />
+                        </path>
+                    </svg>
+                </a>
+            </li>
+        </ul>
+        <a href="javascript:" class="logout" id="logout-btn">Cerrar sesión</a>
+    </aside>
+</body>
+
+<template id="credencial-template">
+    <div class="modal-background">
+        <div class="modal-qr">
+            <img width="500" style="max-width: 90%" class="template-qr">
+            <span class="template-qr-text">Presiona para salir</span>
+        </div>
+    </div>
+</template>
+
+<template id="aside-background">
+    <div class="aside-background"></div>
+</template>
+
+<script>
+    if (!localStorage.getItem('usuario')) {
+        window.location.href = '/login';
+    }
+
+    const parsedResp = JSON.parse(localStorage.getItem('usuario'));
+
+    function decodeHTMLEntities(text) {
+        const txt = document.createElement("textarea");
+        txt.innerHTML = text;
+        return txt.value;
+    }
+    const userInformation = parsedResp.reduce((acc, item) => {
+        // Decodificar entidades HTML
+        let key = decodeHTMLEntities(item.dato);
+
+        // Eliminar ":" y caracteres especiales, convertir a minúsculas y reemplazar espacios por "_"
+        key = key.replace(/:\s*$/, "").toLowerCase().replace(/[^a-z0-9\s]/gi, "").replace(/\s+/g, "_");
+
+        acc[key] = item.valor;
+        return acc;
+    }, {});
+
+    console.log(userInformation);
+
+    let noControl = localStorage.getItem('noControl');
+    let imgPerfil = document.querySelector('.credencial-foto');
+
+    // tomar los 2 primeros caracteres del noControl
+    let digitos = noControl.substring(0, 2);
+
+    imgPerfil.src = `https://intertec.tec-carbonifera.edu.mx/fotos/AL/${digitos}/${noControl}.jpg`;
+
+    let lblVigen = document.querySelector('.credencial-leyenda');
+    let lblNombre = document.querySelector('.credencial-nombre');
+    let lblNoControl = document.querySelector('.credencial-nocontrol');
+    let lblCarrera = document.querySelector('.credencial-carrera');
+    let lblNSS = document.querySelector('.credencial-dato');
+    let lblCURP = document.querySelector('.dato-curp');
+    let lblPeriodo = document.querySelector('.dato-periodo');
+
+    lblVigen.textContent = userInformation.situacioacuten_de_vigencia;
+    lblCarrera.textContent = userInformation.carrera;
+    lblNombre.textContent = userInformation.nombre_del_alumno;
+    lblCURP.textContent = userInformation.clave_curp;
+    lblPeriodo.textContent = userInformation.periodo_actual_o_ultimo;
+    lblNoControl.textContent = noControl;
+
+    let request = fetch('https://idtec.websitos256.com/api/Qr/Generar', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            "vigencia": userInformation.situacioacuten_de_vigencia,
+            "numControl": noControl,
+            "nombreAlumno": userInformation.nombre_del_alumno,
+            "carrera": userInformation.carrera,
+            "nss": userInformation.clave_curp,
+            "curp": userInformation.clave_curp,
+            "periodo": userInformation.periodo_actual_o_ultimo,
+        })
+    });
+
+    request.then(response => {
+        return response.blob();
+    }).then(blob => {
+        let url = URL.createObjectURL(blob);
+        let qr = document.querySelector('.credencial-qr');
+        qr.src = url;
+    });
+</script>
+<script>
+    let qr = document.querySelector('.credencial-qr');
+
+    qr.addEventListener('click', () => {
+        let template = document.getElementById('credencial-template');
+        let clone = template.content.cloneNode(true);
+
+        // append to body
+        document.body.appendChild(clone);
+
+        // add event listener to close
+        let modal = document.querySelector('.modal-qr');
+        modal.addEventListener('click', () => {
+            modal.remove();
+        });
+
+        // copy src of qr to template
+        let qr = document.querySelector('.credencial-qr');
+        let qrTemplate = document.querySelector('.template-qr');
+        qrTemplate.src = qr.src;
+    });
+
+    let aside = document.querySelector('.aside');
+
+    function toggleAside() {
+        aside.classList.toggle('aside-active');
+    }
+
+    let asideBtn = document.querySelector('.header-button');
+
+    asideBtn.addEventListener('click', () => {
+        let template = document.getElementById('aside-background');
+        let clone = template.content.cloneNode(true);
+
+        // append to body
+        document.body.appendChild(clone);
+
+        // add event listener to close
+        let closeBtn = document.querySelector('.aside-close');
+
+        closeBtn.addEventListener('click', () => {
+            let asideBackground = document.querySelector('.aside-background');
+            asideBackground.remove();
+        });
+    });
+
+    let btnLogout =document.getElementById('logout-btn');
+
+    btnLogout.addEventListener('click', () => {
+        localStorage.removeItem('password');
+        localStorage.removeItem('usuario');
+        localStorage.removeItem('noControl');
+
+        window.location.href = '/login';
+    });
+
+</script>
+
+</html>

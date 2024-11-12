@@ -1,0 +1,37 @@
+﻿@page
+
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles/main.css">
+    <link rel="manifest" href="/manifest.json">
+    <title>Inicio de sesión</title>
+</head>
+
+<body>
+    <main class="login">
+        <form action="login">
+            <img src="/assets/img/itesrc.png" alt="ITESRC logo" class="login-img">
+            <h1 class="login-title">Credencial Virtual</h1>
+            <span class="login-subtitle">ITESRC</span>
+            <div class="login-input">
+                <label for="numControl" class="login-label">Número de control</label>
+                <input type="text" name="numControl" id="numControl" class="login-entry"
+                       placeholder="Escriba el usuario">
+            </div>
+            <div class="login-input">
+                <label for="password" class="login-label">Contraseña</label>
+                <input type="password" name="password" id="password" class="login-entry"
+                       placeholder="Escriba la contraseña">
+            </div>
+            <span class="login-error"></span>
+            <button class="login-button">Iniciar sesión</button>
+        </form>
+    </main>
+    <script src="/scripts/main.js"></script>
+</body>
+
+</html>

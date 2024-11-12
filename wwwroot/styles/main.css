@@ -1,0 +1,485 @@
+:root {
+    --white-color: #fff;
+    --black-color: #333;
+    --gray-color: #eee;
+    --primary-color: #0EB493;
+}
+
+@font-face {
+    font-family: "inter";
+    src: url("/assets/fonts/Inter_18pt-Regular.ttf") format("ttf");
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--white-color);
+    margin: 0;
+    padding: 0;
+    font-family: "inter", sans-serif;
+    min-height: 100vh;
+}
+
+main.login {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+main.login form {
+    display: flex;
+    padding: 2rem;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1rem;
+    min-height: 100vh;
+}
+
+main.login .login-img {
+    display: flex;
+    justify-content: center;
+    max-width: 50%;
+    margin: 0 auto;
+}
+
+main.login .login-title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #062033;
+    margin: 0;
+}
+
+main.login .login-subtitle {
+    text-align: center;
+    font-size: 1rem;
+    color: var(--black-color);
+    margin-bottom: 2rem;
+}
+
+main.login .login-input {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+main.login .login-label {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--black-color);
+}
+
+main.login .login-error {
+    color: red;
+    text-align: center;
+}
+
+main.login .login-entry, .panel-entry {
+    background-color: var(--gray-color);
+    padding: 1rem;
+    font-size: 1.1rem;
+    border: none;
+}
+
+main.login .login-button {
+    margin-top: 2rem;
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 1rem;
+    font-size: 1.3rem;
+    border: none;
+    cursor: pointer;
+}
+
+header.header {
+    color: var(--white-color);
+    background: #0EB493;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 3;
+}
+
+.header-button {
+    cursor: pointer;
+}
+
+section.panel { 
+    background-color: white;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80vw;
+    height: 80vh;
+    transform: translate(-50%, -50%);
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+section.panel .credencial {
+    box-shadow: none;
+    border: none;
+}
+
+section.panel article.credencial:before {
+    background-position: 50% 80%;
+}
+
+.panel .panel-titulo {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #062033;
+    text-align: center;
+}
+
+.panel .panel-text {
+    font-size: medium;
+    font-weight: bold;
+}
+
+.panel .panel-btn {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+    padding: 1rem;
+    font-size: 1.3rem;
+    border: none;
+    cursor: pointer;
+}
+
+section.panel .credencial {
+    position: static;
+    transform: none;
+}
+
+section.panel .credencial:before {
+    display: none;
+}
+
+main.index {
+    background: linear-gradient(0deg, #FFFFFF 0%, #BDD4D2 25.54%, #075E54 94.61%);
+    min-height: 100vh;
+    position: relative;
+}
+
+.index .credencial {
+    text-align: center;
+    margin: 2rem auto 10rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.aside {
+    position: fixed;
+    top: 0;
+    right: 0;
+    background-color: white;
+    height: 100vh;
+    min-width: 60vw;
+    border-left: 1px solid #EBEBEB;
+    transform: translateX(100%);
+    transition: all 0.3s;
+    z-index: 5;
+    padding: 1rem;
+}
+
+.aside-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    cursor: pointer;
+}
+
+.aside-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 4;
+    transition: all 0.3s;
+}
+
+.aside-active {
+    transform: translateX(0);
+}
+
+.menu {
+    margin: 5rem 0px 0px 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    list-style-type: none;
+}
+
+.menu .menu-item {
+    cursor: pointer;
+    border-bottom: 1px solid var(--primary-color);
+}
+
+.menu .menu-item>a {
+    text-decoration: none;
+    color: var(--primary-color);
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logout {
+    display: block;
+    cursor: pointer;
+    background-color: var(--primary-color);
+    text-decoration: none;
+    text-align: center;
+    margin-top: 1rem;
+    color: var(--white-color);
+    padding: 1rem;
+    font-size: 1.3rem;
+    width: 100%;
+    margin-top: 5rem;
+}
+
+.menu .menu-item>a:hover {
+    background-color: var(--primary-color);
+    color: var(--white-color);
+}
+
+article.credencial:before {
+    content: ' ';
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.1;
+    background-image: url("/assets/img/tec-4.png");
+    background-size: 100px;
+    background-repeat: no-repeat;
+    background-position: center;
+    z-index: 1;
+}
+
+article.credencial {
+    background: #FFFFFF;
+    padding: 1rem 2rem;
+    border-radius: 10px;
+    border: 1px solid #EBEBEB;
+    box-shadow: 0px 4px 4px 0px #00000040;
+    width: max-content;
+    max-width: 80vw;
+}
+
+.credencial .credencial-leyenda {
+    display: block;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #062033;
+    margin-bottom: 10px;
+}
+
+.credencial .credencial-foto {
+    display: block;
+    margin: 0 auto;
+}
+
+.credencial .credencial-logos {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.credencial .credencial-nocontrol {
+    display: block;
+    font-size: 1.5rem;
+    color: #062033;
+    margin-bottom: 2rem;
+}
+
+.credencial .credencial-nombre {
+    font-size: 1.3rem;
+    padding: 5px;
+    display: block;
+}
+
+.credencial .credencial-carrera {
+    font-size: 1.2rem;
+    padding: 5px;
+    display: block;
+}
+
+.credencial .credencial-info {
+    font-size: small;
+    padding: 5px;
+    color: #696969;
+    display: block;
+}
+
+.credencial .credencial-dato {
+    color: #075E54;
+}
+
+.credencial .credencial-qr {
+    display: block;
+    margin: 2rem auto 0px;
+}
+
+.indicacion {
+    color: #B7B7B7;
+    font-size: small;
+}
+
+.modal-qr {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+}
+
+.template-qr-text {
+    color: #FFFFFF;
+    font-size: 1.1rem;
+    padding: 1rem;
+}
+
+@media screen and (min-width: 768px) {
+    body {
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-image: linear-gradient(0deg, rgba(255, 255, 255, 0.8) 0%, rgba(189, 212, 210, 0.8) 25.54%, rgba(7, 94, 84, 0.8) 94.61%), url("/assets/img/tec.jpg");
+    }
+
+    main.login {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    main.login form {
+        position: absolute;
+        min-height: auto;
+        min-width: 40vw;
+        background-color: var(--white-color);
+    }
+
+    .header {
+        z-index: 2;
+    }
+}
+
+@media (orientation: landscape) {
+    body {
+        max-height: 100%;
+        background-image: none;
+    }
+
+    article.credencial:before {
+        background-size: 200px;
+    }
+
+    .index .credencial {
+        margin-top: 2rem;
+        margin-bottom: 2rem;
+        display: grid;
+        max-width: 80%;
+        max-height: auto;
+        position: relative;
+        grid-template-areas:
+            "header header header"
+            "foto nombre qr"
+            "foto carrera qr"
+            "foto infonss qr"
+            "foto infocurp qr"
+            "nocontrol infoperiodo indicacion"
+            "nocontrol logos indicacion";
+        gap: 1rem;
+    }
+
+    .modal-qr {
+        width: 100%;
+        height: 100%;
+        justify-content: initial;
+    }
+
+    .template-qr {
+        margin-top: 2rem;
+        height: 70% !important;
+        width: auto !important;
+    }
+
+    .credencial .credencial-leyenda {
+        grid-area: header;
+    }
+
+    .credencial .credencial-nombre {
+        grid-area: nombre;
+        text-align: left;
+        color: var(--primary-color);
+    }
+
+    .credencial .credencial-carrera {
+        grid-area: carrera;
+        text-align: left;
+    }
+
+    .credencial .credencial-indicacion {
+        grid-area: indicacion;
+    }
+
+    .credencial .credencial-nocontrol {
+        grid-area: nocontrol;
+        text-align: center;
+    }
+
+    .credencial-info {
+        text-align: left;
+    }
+
+    .info-nss {
+        grid-area: infonss;
+    }
+
+    .info-curp {
+        grid-area: infocurp;
+    }
+
+    .info-periodo {
+        grid-area: infoperiodo;
+    }
+
+    .credencial .credencial-logos {
+        flex-direction: row;
+        grid-area: logos;
+    }
+
+    .credencial .credencial-foto {
+        height: 100%;
+        grid-area: foto;
+    }
+
+    .credencial .credencial-qr {
+        grid-area: qr;
+    }
+}
