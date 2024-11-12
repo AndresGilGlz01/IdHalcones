@@ -168,13 +168,8 @@
             'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-            "vigencia": userInformation.situacioacuten_de_vigencia,
-            "numControl": noControl,
-            "nombreAlumno": userInformation.nombre_del_alumno,
-            "carrera": userInformation.carrera,
-            "nss": userInformation.clave_curp,
-            "curp": userInformation.clave_curp,
-            "periodo": userInformation.periodo_actual_o_ultimo,
+            "NumControl": noControl,
+            "Contraseña" : localStorage.getItem('password')
         })
     });
 
