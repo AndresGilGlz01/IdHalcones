@@ -22,10 +22,23 @@ body {
     min-height: 100vh;
 }
 
-main.login {
-    max-width: 1000px;
-    margin: 0 auto;
+main{
+    overflow:hidden;
 }
+
+main .credencial-foto{
+    width:120px;
+    height:120px;
+}
+
+main .credencial-nocontrol, main .credencial-numero{
+
+}
+
+    main.login {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
 
 main.login form {
     display: flex;
@@ -301,19 +314,19 @@ article.credencial {
 
 .credencial .credencial-nocontrol {
     display: block;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     color: #062033;
     margin-bottom: 2rem;
 }
 
 .credencial .credencial-nombre {
-    font-size: 1.3rem;
+    font-size: 1.0rem;
     padding: 5px;
     display: block;
 }
 
 .credencial .credencial-carrera {
-    font-size: 1.2rem;
+    font-size: 0.9rem;
     padding: 5px;
     display: block;
 }
@@ -331,7 +344,7 @@ article.credencial {
 
 .credencial .credencial-qr {
     display: block;
-    margin: 2rem auto 0px;
+    margin: 0rem auto 0px;
 }
 
 .indicacion {
