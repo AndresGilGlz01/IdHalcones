@@ -21,7 +21,7 @@ async function Login(noControl, password) {
 
     try {
         // send post with numControl and contraseña values in body
-        let response = await fetch(url, {
+        await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -29,19 +29,19 @@ async function Login(noControl, password) {
             body: JSON.stringify({numControl: noControl, contraseña: password})
         });
 
-        let data = await response.json();
+        //let data = await response.json();
 
-        localStorage.setItem('password', data.contra)
-        localStorage.setItem('usuario', data.resp)
-        localStorage.setItem('noControl', noControl)
+        //localStorage.setItem('password', data.contra)
+        //localStorage.setItem('usuario', data.resp)
+        //localStorage.setItem('noControl', noControl)
 
-        if (data.resp) {
-            window.location.href = '/';
-        }
-        else {
-            let lblError = document.querySelector('.login-error');
-            lblError.textContent = 'Algo salió mal, intente de nuevo';
-        }
+        //if (data.resp) {
+        //    window.location.href = '/';
+        //}
+        //else {
+        //    let lblError = document.querySelector('.login-error');
+        //    lblError.textContent = 'Algo salió mal, intente de nuevo';
+        //}
 
     }
     catch (error) {
