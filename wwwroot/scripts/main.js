@@ -33,13 +33,13 @@ async function Login(noControl, password) {
 		localStorage.setItem('password', passEncrypted);
         localStorage.setItem('noControl', noControl)
 
-        // verify 200 status
-		if (response.status === 200) {
-            window.location.href = '/';
-        } else {
-            let lblError = document.querySelector('.login-error');
-            lblError.textContent = 'Algo salió mal, intente de nuevo';
-        }
+          //      // verify 200 status
+		        //if (response.status === 200) {
+          //          window.location.href = '/';
+          //      } else {
+          //          let lblError = document.querySelector('.login-error');
+          //          lblError.textContent = 'Algo salió mal, intente de nuevo';
+          //      }
     }
     catch (error) {
         let lblError = document.querySelector('.login-error');

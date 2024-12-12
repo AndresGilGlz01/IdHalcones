@@ -1,11 +1,11 @@
 {
   "name": "Id Halcones",
   "short_name": "IdHalcones",
-  "start_url": "https://idhalcon.labsystec.net",
+  "start_url": "/login",
   "display": "standalone",
   "background_color": "#FFF",
   "theme_color": "white",
-  "scope": "https://idhalcon.labsystec.net",
+  "scope": "/",
   "description": "Credencial Halcones ITESRC",
   "icons": [
     {

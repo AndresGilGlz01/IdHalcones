@@ -1,90 +1,139 @@
-//let cacheName = "idHalconesV1";
-//let dbVersion = 1;
-//let nombreTabla = 'usuarios';
-//async function precache() {
-//    let cache = await caches.open(cacheName);
-//};
+// service-worker.js
 
-//self.addEventListener('fetch', event => {
-//    if (event.request.method === "POST" && event.request.url.includes("api/login")) {
-//        let response = await fetch(event.request);
-//        event.respondWith(Login(response));
-//    }
-//    else {
-//        event.respondWith(cacheFirst(event.request));
-//    }
+let cacheName = "idHalconesV1";
 
-//});
+let dbVersion = 2;
+let nombreTabla = 'usuario';
 
-//async function cacheFirst(req) {
-//    try {
-//        let cache = await caches.open(cacheName);
-//        let response = await cache.match(req);
-//        if (response) {
-//            return response;
-//        } else {
-//            let respuesta = await fetch(req);
-//            if (respuesta && respuesta.ok) { // Verificar si la respuesta es válida
-//                cache.put(req, respuesta.clone());
-//            }
-//            return respuesta;
-//        }
-//    } catch (x) {
-//        return new Response("Error fetching the resource: " + req.url, { status: 500 });
-//    }
-//}
+async function precache() {
+    let cache = await caches.open(cacheName);
+}
+self.addEventListener("install", function (e) {
+    e.waitUntil(createDB());
+    e.waitUntil(precache());
+});
 
-//function Login(response) {
+self.addEventListener('fetch', event => {
+    if (event.request.method === "POST" && event.request.url.includes("api/login")) {
+        event.respondWith(handleLogin(event.request));
+    } 
+    else {
+        event.respondWith(cacheFirst(event.request));
+    } 
 
-//    if (!response.ok) { return response; }
+});
 
-//    let data = await response.json();
+async function cacheFirst(req) {
+    try {
+        let cache = await caches.open(cacheName);
+        let response = await cache.match(req);
 
-//    var json = {
-//        "id": 1,
-//        "usuario": data.resp,
-//        "password": data.password,
-//        "noControl": noControl
-//    };
+        if (response) {
+            console.log("Cargando desde el caché:", req.url);
+            return response;
+        } else {
+            console.log("No encontrado en caché, solicitando:", req.url);
+            let requestClone = req.clone();
+            let respuesta = await fetch(req);
 
-//    addToDB(json);
+            if (respuesta && respuesta.ok) {
+                
+                cache.put(requestClone, respuesta.clone());
+            }
 
-//    if (data.resp) {
-//        return Response.redirect('/');
-//    }
-//}
+            return respuesta;
+        }
+    } catch (x) {
+        console.error("Error en cacheFirst:", x);
+        return new Response("Error fetching the resource: " + req.url, { status: 500 });
+    }
+}
 
-//function createDB() {
-//    let openRequest = indexedDB.open("informacion", dbVersion);
+async function handleLogin(request) {
+    let response = await fetch(request);
+    if (!response.ok) {
+        return response;
+    }
 
-//    openRequest.onupgradeneeded = function () {
-//        let db = openRequest.result;
-//        db.createObjectStore(nombreTabla, "id");
-//    }
+    let data = await response.json();
 
-//    openRequest.onerror = function () {
+    var json = {
+        "id": 1,
+        "password": data.contra,
+        "noControl": data.numControl,
+        "dateLogin": new Date().toISOString()
+    };
 
-//    };
+    addToDB(json);
 
-//    openRequest.onsuccess = function () {
+    if (response.ok) {
+        return new Response(JSON.stringify({ redirect: '/index' }), {
+            headers: { 'Content-Type': 'application/json' },
+        });
+    } else {
+        return response;
+    }
+}
 
-//    };
-//};
+function createDB() {
+    let openRequest = indexedDB.open("informacion", dbVersion);
 
-//function addToDB(obj) {
-//    let openRequest = indexedDB.open("informacion", dbVersion);
+    openRequest.onupgradeneeded = function () {
+        let db = openRequest.result;
+        if (!db.objectStoreNames.contains(nombreTabla)) {
+            db.createObjectStore(nombreTabla, { keyPath: "id" });
+        }
+    }
 
-//    openRequest.onsuccess = function () {
-//        let db = openRequest.result;
-//        let transaction = db.transaction(nombreTabla, "readwrite");
-//        let objectStore = transaction.objectStore(nombreTabla);
-//        const resultado = objectStore.add(obj);
+    openRequest.onerror = function () {
+        console.error("Error al crear la base de datos");
+    };
 
-//        resultado.onsuccess = function () {
-//        };
+    openRequest.onsuccess = function () {
+        console.log("Base de datos creada con éxito");
+    };
+}
 
-//        // Si hubo un error al agregar el objeto
-//        resultado.onerror = function () {
-//        };
-//    }
-//}
+function addToDB(obj) {
+    let openRequest = indexedDB.open("informacion", dbVersion);
+
+    openRequest.onsuccess = function () {
+        let db = openRequest.result;
+        let transaction = db.transaction(nombreTabla, "readwrite");
+        let objectStore = transaction.objectStore(nombreTabla);
+        const resultado = objectStore.add(obj);
+
+        resultado.onsuccess = function () {
+            console.log("Objeto agregado a la base de datos");
+        };
+
+        resultado.onerror = function () {
+            console.error("Error al agregar el objeto a la base de datos");
+        };
+    }
+}
+
+function getById(id) {
+    return new Promise((resolve, reject) => {
+        let openRequest = indexedDB.open("informacion", dbVersion);
+
+        openRequest.onsuccess = function () {
+            let db = openRequest.result;
+            let transaction = db.transaction(nombreTabla, "readonly");
+            let objectStore = transaction.objectStore(nombreTabla);
+            const resultado = objectStore.get(id);
+
+            resultado.onsuccess = function () {
+                resolve(resultado.result); 
+            };
+
+            resultado.onerror = function () {
+                reject("Error al obtener datos de la BD"); 
+            };
+        };
+
+        openRequest.onerror = function () {
+            reject("Error al abrir la base de datos");
+        };
+    });
+}

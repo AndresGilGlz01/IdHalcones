@@ -1,0 +1,22 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <title>ID HALCON</title>
+    <meta name="viewport" content="width=device-width" />
+    <link rel="stylesheet" href="/styles/main.css">
+</head>
+<body>
+    <main>
+        @RenderBody()
+    </main>
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/serviceworker.js?v=5')
+                .then(reg => console.log('service worker registrado'))
+                .catch(err => console.error('Error al registrar el service worker', err));
+        }
+    </script>
+</body>
+</html>

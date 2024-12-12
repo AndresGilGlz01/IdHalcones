@@ -1,13 +1,14 @@
 ﻿@page
+@{
+    Layout = "_Layout";
 
+}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/main.css">
-    <link rel="manifest" href="/manifest.json">
     <title>Inicio</title>
 </head>
 
@@ -115,21 +116,65 @@
 </template>
 
 <script>
-    if (!localStorage.getItem('password')) {
-        window.location.href = '/login';
+    // if () {
+    //     window.location.href = '/login';
+    // }
+
+    let noControl = "";
+    let contra = "";
+    // let password = localStorage.getItem('password');
+    let dbVersion = 2;
+    let nombreTabla = 'usuario';
+
+    async function getById(id) {
+        return new Promise((resolve, reject) => {
+            let openRequest = indexedDB.open("informacion", dbVersion);
+
+            openRequest.onsuccess = function () {
+                let db = openRequest.result;
+                let transaction = db.transaction(nombreTabla, "readonly");
+                let objectStore = transaction.objectStore(nombreTabla);
+                const resultado = objectStore.get(id);
+
+                resultado.onsuccess = function () {
+                    resolve(resultado.result); // Resuelve la promesa con el resultado
+                };
+
+                resultado.onerror = function () {
+                    reject("Error al obtener datos de la BD");
+                };
+            };
+
+            openRequest.onerror = function () {
+                reject("Error al abrir la base de datos");
+            };
+        });
     }
 
-    let noControl = localStorage.getItem('noControl');
-    let password = localStorage.getItem('password');
+    async function esperarDatos() {
+        try {
+            let noControl = await getById(1);  // Esperar la respuesta de la promesa
+            console.log(noControl);
+            return noControl;  // Mostrar el resultado de la promesa resuelta
+        } catch (error) {
+            return error;  // Manejo de errores si la promesa falla
+        }
+    }
 
-    async function GetUserInfo(numControl, password){
+    
+
+    async function GetUserInfo(){
         let url = new URL('https://idtec.websitos256.com/api/alumno');
+        let datosBody = await esperarDatos();
+        noControl = datosBody.noControl;
+        contra = datosBody.password;
+        console.log(datosBody);
         let response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ numControl: numControl, contraseña: password })
+            body: JSON.stringify({ numControl: datosBody.noControl, contraseña: datosBody.password })
         });
 
         if (!response.ok) {
@@ -142,7 +187,7 @@
     }
 
     // Obtener información del usuario
-    GetUserInfo(noControl, password).then(userInformation => {
+    GetUserInfo().then(userInformation => {
         console.log(userInformation);
         setStudentInformation(userInformation, noControl);
     }).catch(error => {
@@ -150,8 +195,10 @@
     });
     
     // Imagen del estudiante
-    function setStudentImg(nocontrol) {
+    async function setStudentImg(nocontrol) {
         let imgPerfil = document.querySelector('.credencial-foto');
+        let datosBody = await esperarDatos();
+        noControl = datosBody.noControl;
         let digitos = noControl.substring(0, 2);
         imgPerfil.src = `https://intertec.tec-carbonifera.edu.mx/fotos/AL/${digitos}/${noControl}.jpg`;
     }
@@ -173,24 +220,37 @@
         lblNoControl.textContent = noControl;
     }
 
-    let request = fetch('https://idtec.websitos256.com/api/Qr/Generar', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            "NumControl": noControl,
-            "Contraseña" : localStorage.getItem('password')
-        })
-    });
+    async function getQr() {
+        let url = new URL('https://idtec.websitos256.com/api/Qr/Generar');
+        let datosBody = await esperarDatos();
+        let request = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "NumControl": datosBody.noControl,
+                "Contraseña": datosBody.password
+            })
+        });
 
-    request.then(response => {
-        return response.blob();
-    }).then(blob => {
+        if (!request.ok) {
+            throw new Error('Error en la respuesta de la API');
+        }
+
+        let respuesta = await request.blob();
+
+        return respuesta;
+    }
+
+    getQr().then(blob => {
         let url = URL.createObjectURL(blob);
         let qr = document.querySelector('.credencial-qr');
         qr.src = url;
+    }).catch (error => {
+        console.error('Error al obtener la información del usuario:', error);
     });
+
 </script>
 
 <script>

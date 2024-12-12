@@ -1,13 +1,14 @@
 ﻿@page
+@{
+    Layout = "_Layout";
 
+}
 <!DOCTYPE html>
 <html lang="es">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/styles/main.css">
-    <link rel="manifest" href="/manifest.json">
     <title>Inicio de sesión</title>
 </head>
 
@@ -31,7 +32,63 @@
             <button class="login-button">Iniciar sesión</button>
         </form>
     </main>
-    <script src="/scripts/main.js"></script>
+
+@*     <script src="/scripts/main.js"></script> 
+ *@    
+    <script>
+        
+
+        let loginForm = document.querySelector('.login form');
+
+        loginForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            let noControl = document.querySelector('#numControl').value;
+            let password = document.querySelector('#password').value;
+
+            Login(noControl, password);
+        });
+
+        async function Login(noControl, password) {
+            let url = new URL("https://idtec.websitos256.com/api/login");
+
+            try {
+                var response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ numControl: noControl, contraseña: password })
+                });
+
+                // let passEncrypted = await response.text();
+
+                // localStorage.setItem('password', passEncrypted);
+                // localStorage.setItem('noControl', noControl)
+
+                //      // verify 200 status
+                //if (response.status === 200) {
+                //          window.location.href = '/';
+                //      } else {
+                //          let lblError = document.querySelector('.login-error');
+                //          lblError.textContent = 'Algo salió mal, intente de nuevo';
+                //      }
+                if (response.ok) {
+                    let data = await response.json();
+                    if (data.redirect) {
+                        window.location.href = data.redirect; // Redirige a la página especificada
+                    }
+                } else {
+                    let lblError = document.querySelector('.login-error');
+                    lblError.textContent = 'Algo salió mal, intente de nuevo';
+                }
+            }
+            catch (error) {
+                let lblError = document.querySelector('.login-error');
+                lblError.textContent = 'Error al iniciar sesión';
+            }
+        }
+    </script>
 </body>
 
 </html>
