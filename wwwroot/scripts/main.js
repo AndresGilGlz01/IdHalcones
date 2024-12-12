@@ -20,8 +20,7 @@ async function Login(noControl, password) {
     let url = new URL("https://idtec.websitos256.com/api/login");
 
     try {
-        // send post with numControl and contraseña values in body
-        await fetch(url, {
+        var response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -29,20 +28,18 @@ async function Login(noControl, password) {
             body: JSON.stringify({numControl: noControl, contraseña: password})
         });
 
-        //let data = await response.json();
+        let passEncrypted = await response.text();
 
-        //localStorage.setItem('password', data.contra)
-        //localStorage.setItem('usuario', data.resp)
-        //localStorage.setItem('noControl', noControl)
+		localStorage.setItem('password', passEncrypted);
+        localStorage.setItem('noControl', noControl)
 
-        //if (data.resp) {
-        //    window.location.href = '/';
-        //}
-        //else {
-        //    let lblError = document.querySelector('.login-error');
-        //    lblError.textContent = 'Algo salió mal, intente de nuevo';
-        //}
-
+        // verify 200 status
+		if (response.status === 200) {
+            window.location.href = '/';
+        } else {
+            let lblError = document.querySelector('.login-error');
+            lblError.textContent = 'Algo salió mal, intente de nuevo';
+        }
     }
     catch (error) {
         let lblError = document.querySelector('.login-error');

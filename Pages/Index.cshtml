@@ -115,52 +115,63 @@
 </template>
 
 <script>
-    if (!localStorage.getItem('usuario')) {
+    if (!localStorage.getItem('password')) {
         window.location.href = '/login';
     }
 
-    const parsedResp = JSON.parse(localStorage.getItem('usuario'));
-
-    function decodeHTMLEntities(text) {
-        const txt = document.createElement("textarea");
-        txt.innerHTML = text;
-        return txt.value;
-    }
-    const userInformation = parsedResp.reduce((acc, item) => {
-        // Decodificar entidades HTML
-        let key = decodeHTMLEntities(item.dato);
-
-        // Eliminar ":" y caracteres especiales, convertir a minúsculas y reemplazar espacios por "_"
-        key = key.replace(/:\s*$/, "").toLowerCase().replace(/[^a-z0-9\s]/gi, "").replace(/\s+/g, "_");
-
-        acc[key] = item.valor;
-        return acc;
-    }, {});
-
-    console.log(userInformation);
-
     let noControl = localStorage.getItem('noControl');
-    let imgPerfil = document.querySelector('.credencial-foto');
+    let password = localStorage.getItem('password');
 
-    // tomar los 2 primeros caracteres del noControl
-    let digitos = noControl.substring(0, 2);
+    async function GetUserInfo(numControl, password){
+        let url = new URL('https://idtec.websitos256.com/api/alumno');
+        let response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ numControl: numControl, contraseña: password })
+        });
 
-    imgPerfil.src = `https://intertec.tec-carbonifera.edu.mx/fotos/AL/${digitos}/${noControl}.jpg`;
+        if (!response.ok) {
+            throw new Error('Error en la respuesta de la API');
+        }
+        
+        let userInformation = await response.json();
+        
+        return userInformation;
+    }
 
-    let lblVigen = document.querySelector('.credencial-leyenda');
-    let lblNombre = document.querySelector('.credencial-nombre');
-    let lblNoControl = document.querySelector('.credencial-nocontrol');
-    let lblCarrera = document.querySelector('.credencial-carrera');
-    let lblNSS = document.querySelector('.credencial-dato');
-    let lblCURP = document.querySelector('.dato-curp');
-    let lblPeriodo = document.querySelector('.dato-periodo');
+    // Obtener información del usuario
+    GetUserInfo(noControl, password).then(userInformation => {
+        console.log(userInformation);
+        setStudentInformation(userInformation, noControl);
+    }).catch(error => {
+        console.error('Error al obtener la información del usuario:', error);
+    });
+    
+    // Imagen del estudiante
+    function setStudentImg(nocontrol) {
+        let imgPerfil = document.querySelector('.credencial-foto');
+        let digitos = noControl.substring(0, 2);
+        imgPerfil.src = `https://intertec.tec-carbonifera.edu.mx/fotos/AL/${digitos}/${noControl}.jpg`;
+    }
+    setStudentImg(noControl);
 
-    lblVigen.textContent = userInformation.situacioacuten_de_vigencia;
-    lblCarrera.textContent = userInformation.carrera;
-    lblNombre.textContent = userInformation.nombre_del_alumno;
-    lblCURP.textContent = userInformation.clave_curp;
-    lblPeriodo.textContent = userInformation.periodo_actual_o_ultimo;
-    lblNoControl.textContent = noControl;
+    function setStudentInformation(student, nocontrol) {
+        let lblVigen = document.querySelector('.credencial-leyenda');
+        let lblNombre = document.querySelector('.credencial-nombre');
+        let lblNoControl = document.querySelector('.credencial-nocontrol');
+        let lblCarrera = document.querySelector('.credencial-carrera');
+        let lblCURP = document.querySelector('.dato-curp');
+        let lblPeriodo = document.querySelector('.dato-periodo');
+
+        lblVigen.textContent = student.SITUACIÓN_DE_VIGENCIA;
+        lblCarrera.textContent = student.CARRERA;
+        lblNombre.textContent = student.NOMBRE_DEL_ALUMNO;
+        lblCURP.textContent = student.CLAVE_CURP;
+        lblPeriodo.textContent = student.PERIODO_ACTUAL_O_ULTIMO;
+        lblNoControl.textContent = noControl;
+    }
 
     let request = fetch('https://idtec.websitos256.com/api/Qr/Generar', {
         method: 'POST',
@@ -181,6 +192,7 @@
         qr.src = url;
     });
 </script>
+
 <script>
     let qr = document.querySelector('.credencial-qr');
 
