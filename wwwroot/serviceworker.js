@@ -7,6 +7,7 @@ let nombreTabla = 'usuario';
 
 async function precache() {
     let cache = await caches.open(cacheName);
+    await cache.add("/index");
 }
 self.addEventListener("install", function (e) {
     e.waitUntil(createDB());

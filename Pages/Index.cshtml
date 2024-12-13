@@ -116,18 +116,6 @@
 </template>
 
 <script>
-    // if () {
-    //     window.location.href = '/login';
-    // }
-
-
-    // let password = localStorage.getItem('password');
-
-   
-
-   
-    
-
     async function GetUserInfo(){
         let url = new URL('https://idtec.websitos256.com/api/alumno');
         let response = await fetch(url, {
@@ -142,7 +130,7 @@
         }
 
         if (response.url.includes("/login")){
-            window.location.href = response.url;
+            return response.url;
         }
 
         let userInformation = await response.json();
@@ -150,14 +138,14 @@
         if(userInformation){
             return userInformation;
         }
-
-       
-
     }
 
     // Obtener información del usuario
     GetUserInfo().then(userInformation => {
         console.log(userInformation);
+        if (typeof userInformation === 'string' && userInformation.includes("/login")) {
+            window.location.href = userInformation
+        }
         setStudentInformation(userInformation);
     }).catch(error => {
         console.error('Error al obtener la información del usuario:', error);
@@ -202,21 +190,31 @@
         }
 
         if (request.url.includes("/login")) {
-            window.location.href = request.url;
+            return request.url;
         }
 
         let respuesta = await request.blob();
 
-        return respuesta;
+        return await request.blob();
     }
 
-    getQr().then(blob => {
-        let url = URL.createObjectURL(blob);
-        let qr = document.querySelector('.credencial-qr');
-        qr.src = url;
-    }).catch (error => {
-        console.error('Error al obtener la información del usuario:', error);
-    });
+    getQr()
+        .then(response => {
+            // Si la respuesta es una URL (redirigir al login)
+            if (typeof response === 'string' && response.includes("/login")) {
+                window.location.href = response; // Redirigir al login
+                return;
+            }
+
+            // Si es un Blob, procesarlo como imagen QR
+            let blob = response;
+            let url = URL.createObjectURL(blob);
+            let qr = document.querySelector('.credencial-qr');
+            qr.src = url;
+        })
+        .catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
 
 </script>
 
