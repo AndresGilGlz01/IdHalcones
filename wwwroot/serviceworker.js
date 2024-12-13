@@ -61,6 +61,7 @@ async function timeBasedCache(req) {
 
             return nuevoResponse;
         } else {
+            logout("https://idtec.websitos256.com/api/alumno/delete");
             return new Response("Error en la red", { status: 502 });
         }
 
