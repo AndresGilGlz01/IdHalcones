@@ -23,7 +23,9 @@ self.addEventListener('fetch', event => {
     } else if (event.request.url.includes("/api/")) {
         event.respondWith(authenticateRequest(event.request));
 
-    }  else {
+    } else if (event.request.url.includes("/serviceworker")) {
+        event.respondWith(fetch(event.request));
+    } else { 
         event.respondWith(cacheFirst(event.request));
     }
 });
@@ -147,9 +149,8 @@ async function handleLogin(request) {
         return response;
     }
 }
-function logout(req) {
+async function logout(req) {
     var eliminado = deleteById(1);
-
 
     if (eliminado) {
         caches.delete(cacheName);
