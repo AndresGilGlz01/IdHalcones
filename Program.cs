@@ -5,7 +5,6 @@ builder.Services.AddControllers();
 
 var app = builder.Build();
 
-app.MapGet("/", () => Results.Redirect("/login"));
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.MapRazorPages();

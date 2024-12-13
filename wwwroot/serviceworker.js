@@ -14,14 +14,85 @@ self.addEventListener("install", function (e) {
 });
 
 self.addEventListener('fetch', event => {
+
     if (event.request.method === "POST" && event.request.url.includes("api/login")) {
         event.respondWith(handleLogin(event.request));
-    } 
-    else {
+    } else if (event.request.url.includes("/api/")) {
+        event.respondWith(authenticateRequest(event.request));
+    } else {
         event.respondWith(cacheFirst(event.request));
-    } 
-
+    }
 });
+
+let maxage = 7 * 24 * 60 * 60 * 1000;
+async function timeBasedCache(req) {
+    try {
+        let cache = await caches.open(cacheName);
+        let cachedResponse = await cache.match(req);
+
+        if (cachedResponse) {
+            let fechaDescarga = cachedResponse.headers.get("fecha");
+
+            if (fechaDescarga) {
+                let fecha = new Date(fechaDescarga);
+                let hoy = new Date();
+                let diferencia = hoy - fecha;
+
+                if (diferencia <= maxage) {
+                    return cachedResponse;
+                }
+            }
+        }
+
+        let networkResponse = await fetch(req);
+
+        if (networkResponse.ok) {
+            let nuevoResponse = new Response(networkResponse.body, {
+                status: networkResponse.status,
+                statusText: networkResponse.statusText,
+                headers: networkResponse.headers
+            });
+            nuevoResponse.headers.append("fecha", new Date().toISOString());  // Añadir la fecha de la descarga
+            await cache.put(req, nuevoResponse.clone());  // Guardar en el caché
+
+            return nuevoResponse;
+        } else {
+            return new Response("Error en la red", { status: 502 });
+        }
+
+    } catch (error) {
+        console.log("Error en timeBasedCache:", error);
+        return new Response("Error interno", { status: 500 });
+    }
+}
+
+
+async function authenticateRequest(request) {
+    let user = await getById(1);
+
+    if (!user) {
+        return Response.redirect('/login', 302);
+    }
+
+    const headers = new Headers(request.headers);
+    headers.set("numControl", user.noControl);
+    headers.set("contra", user.password);
+
+    try {
+        const modifiedRequest = new Request(request, { headers });
+        const response = await timeBasedCache(modifiedRequest);
+
+        if (response.status === 401) {
+            //await deleteById(1);
+            return Response.redirect('/login',302);
+        }
+
+        return response;
+    } catch (err) {
+        return new Response('No se puede conectar al servidor', { status: 503 });
+    }
+
+}
 
 async function cacheFirst(req) {
     try {
@@ -48,7 +119,6 @@ async function cacheFirst(req) {
         return new Response("Error fetching the resource: " + req.url, { status: 500 });
     }
 }
-
 async function handleLogin(request) {
     let response = await fetch(request);
     if (!response.ok) {
@@ -74,7 +144,6 @@ async function handleLogin(request) {
         return response;
     }
 }
-
 function createDB() {
     let openRequest = indexedDB.open("informacion", dbVersion);
 
@@ -93,7 +162,6 @@ function createDB() {
         console.log("Base de datos creada con éxito");
     };
 }
-
 function addToDB(obj) {
     let openRequest = indexedDB.open("informacion", dbVersion);
 
@@ -112,7 +180,6 @@ function addToDB(obj) {
         };
     }
 }
-
 function getById(id) {
     return new Promise((resolve, reject) => {
         let openRequest = indexedDB.open("informacion", dbVersion);

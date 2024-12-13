@@ -1,8 +1,10 @@
 {
   "name": "Id Halcones",
   "short_name": "IdHalcones",
-  "start_url": "/login",
+  "start_url": "/",
   "display": "standalone",
+  "orientation": "any",
+  "id": "idhalcones",
   "background_color": "#FFF",
   "theme_color": "white",
   "scope": "/",

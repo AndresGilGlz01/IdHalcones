@@ -120,91 +120,58 @@
     //     window.location.href = '/login';
     // }
 
-    let noControl = "";
-    let contra = "";
+
     // let password = localStorage.getItem('password');
-    let dbVersion = 2;
-    let nombreTabla = 'usuario';
 
-    async function getById(id) {
-        return new Promise((resolve, reject) => {
-            let openRequest = indexedDB.open("informacion", dbVersion);
+   
 
-            openRequest.onsuccess = function () {
-                let db = openRequest.result;
-                let transaction = db.transaction(nombreTabla, "readonly");
-                let objectStore = transaction.objectStore(nombreTabla);
-                const resultado = objectStore.get(id);
-
-                resultado.onsuccess = function () {
-                    resolve(resultado.result); // Resuelve la promesa con el resultado
-                };
-
-                resultado.onerror = function () {
-                    reject("Error al obtener datos de la BD");
-                };
-            };
-
-            openRequest.onerror = function () {
-                reject("Error al abrir la base de datos");
-            };
-        });
-    }
-
-    async function esperarDatos() {
-        try {
-            let noControl = await getById(1);  // Esperar la respuesta de la promesa
-            console.log(noControl);
-            return noControl;  // Mostrar el resultado de la promesa resuelta
-        } catch (error) {
-            return error;  // Manejo de errores si la promesa falla
-        }
-    }
-
+   
     
 
     async function GetUserInfo(){
         let url = new URL('https://idtec.websitos256.com/api/alumno');
-        let datosBody = await esperarDatos();
-        noControl = datosBody.noControl;
-        contra = datosBody.password;
-        console.log(datosBody);
         let response = await fetch(url, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ numControl: datosBody.noControl, contraseña: datosBody.password })
+            }
         });
 
         if (!response.ok) {
             throw new Error('Error en la respuesta de la API');
         }
-        
+
+        if (response.url.includes("/login")){
+            window.location.href = response.url;
+        }
+
         let userInformation = await response.json();
         
-        return userInformation;
+        if(userInformation){
+            return userInformation;
+        }
+
+       
+
     }
 
     // Obtener información del usuario
     GetUserInfo().then(userInformation => {
         console.log(userInformation);
-        setStudentInformation(userInformation, noControl);
+        setStudentInformation(userInformation);
     }).catch(error => {
         console.error('Error al obtener la información del usuario:', error);
     });
     
     // Imagen del estudiante
-    async function setStudentImg(nocontrol) {
+    function setStudentImg(numControl) {
         let imgPerfil = document.querySelector('.credencial-foto');
-        let datosBody = await esperarDatos();
-        noControl = datosBody.noControl;
-        let digitos = noControl.substring(0, 2);
-        imgPerfil.src = `https://intertec.tec-carbonifera.edu.mx/fotos/AL/${digitos}/${noControl}.jpg`;
+        let digitos = numControl.substring(0, 2);
+        imgPerfil.src = `https://intertec.tec-carbonifera.edu.mx/fotos/AL/${digitos}/${numControl}.jpg`;
     }
-    setStudentImg(noControl);
+    
 
-    function setStudentInformation(student, nocontrol) {
+    function setStudentInformation(student) {
         let lblVigen = document.querySelector('.credencial-leyenda');
         let lblNombre = document.querySelector('.credencial-nombre');
         let lblNoControl = document.querySelector('.credencial-nocontrol');
@@ -217,25 +184,25 @@
         lblNombre.textContent = student.NOMBRE_DEL_ALUMNO;
         lblCURP.textContent = student.CLAVE_CURP;
         lblPeriodo.textContent = student.PERIODO_ACTUAL_O_ULTIMO;
-        lblNoControl.textContent = noControl;
+        lblNoControl.textContent = student.numControl;
+        setStudentImg(student.numControl);
     }
 
     async function getQr() {
         let url = new URL('https://idtec.websitos256.com/api/Qr/Generar');
-        let datosBody = await esperarDatos();
         let request = await fetch(url, {
-            method: 'POST',
+            method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "NumControl": datosBody.noControl,
-                "Contraseña": datosBody.password
-            })
+            }
         });
 
         if (!request.ok) {
             throw new Error('Error en la respuesta de la API');
+        }
+
+        if (request.url.includes("/login")) {
+            window.location.href = request.url;
         }
 
         let respuesta = await request.blob();

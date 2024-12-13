@@ -5,6 +5,7 @@
     <title>ID HALCON</title>
     <meta name="viewport" content="width=device-width" />
     <link rel="stylesheet" href="/styles/main.css">
+    <link rel="manifest" href="/manifest.json" />
 </head>
 <body>
     <main>
@@ -13,7 +14,7 @@
 
     <script>
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/serviceworker.js?v=5')
+            navigator.serviceWorker.register('/serviceworker.js?v=6')
                 .then(reg => console.log('service worker registrado'))
                 .catch(err => console.error('Error al registrar el service worker', err));
         }
