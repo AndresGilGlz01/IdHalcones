@@ -18,9 +18,12 @@ self.addEventListener('fetch', event => {
 
     if (event.request.method === "POST" && event.request.url.includes("api/login")) {
         event.respondWith(handleLogin(event.request));
+    } else if (event.request.method === "GET" && event.request.url.includes("/delete")) {
+        event.respondWith(logout(event.request));
     } else if (event.request.url.includes("/api/")) {
         event.respondWith(authenticateRequest(event.request));
-    } else {
+
+    }  else {
         event.respondWith(cacheFirst(event.request));
     }
 });
@@ -66,8 +69,6 @@ async function timeBasedCache(req) {
         return new Response("Error interno", { status: 500 });
     }
 }
-
-
 async function authenticateRequest(request) {
     let user = await getById(1);
 
@@ -90,11 +91,11 @@ async function authenticateRequest(request) {
 
         return response;
     } catch (err) {
+        consol.log(err);
         return new Response('No se puede conectar al servidor', { status: 503 });
     }
 
 }
-
 async function cacheFirst(req) {
     try {
         let cache = await caches.open(cacheName);
@@ -143,6 +144,18 @@ async function handleLogin(request) {
         });
     } else {
         return response;
+    }
+}
+function logout(req) {
+    var eliminado = deleteById(1);
+
+
+    if (eliminado) {
+        caches.delete(cacheName);
+        return Response.redirect('/login', 302);
+    }
+    else {
+        console.log("no se pudo cerrar sesion.");
     }
 }
 function createDB() {
@@ -202,6 +215,34 @@ function getById(id) {
 
         openRequest.onerror = function () {
             reject("Error al abrir la base de datos");
+        };
+    });
+}
+function deleteById(id) {
+    return new Promise((resolve, reject) => {
+        let openRequest = indexedDB.open("informacion", dbVersion);
+
+        openRequest.onsuccess = function () {
+            let db = openRequest.result;
+            let transaction = db.transaction(nombreTabla, "readwrite");
+            let objectStore = transaction.objectStore(nombreTabla);
+
+            const resultado = objectStore.delete(id);
+
+            resultado.onsuccess = function () {
+                console.log("Objeto eliminado.");
+                resolve(true); // La operación fue exitosa
+            };
+
+            resultado.onerror = function () {
+                console.log("No se pudo eliminar el objeto.");
+                reject(false); // La operación falló
+            };
+        };
+
+        openRequest.onerror = function () {
+            console.error("Error al abrir la base de datos.");
+            reject(false); // Error al abrir la base de datos
         };
     });
 }

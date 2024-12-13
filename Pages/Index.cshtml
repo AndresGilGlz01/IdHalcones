@@ -140,16 +140,55 @@
         }
     }
 
-    // Obtener información del usuario
-    GetUserInfo().then(userInformation => {
-        console.log(userInformation);
-        if (typeof userInformation === 'string' && userInformation.includes("/login")) {
-            window.location.href = userInformation
+    async function initializeApp() {
+        // Asegúrate de que el Service Worker esté listo
+        
+
+        // Continuar con la lógica de la aplicación
+        GetUserInfo().then(userInformation => {
+            console.log(userInformation);
+            if (typeof userInformation === 'string' && userInformation.includes("/login")) {
+                window.location.href = userInformation
+            }
+            setStudentInformation(userInformation);
+        }).catch(error => {
+            console.error('Error al obtener la información del usuario:', error);
+        });
+
+        getQr()
+            .then(response => {
+                // Si la respuesta es una URL (redirigir al login)
+                if (typeof response === 'string' && response.includes("/login")) {
+                    window.location.href = response; // Redirigir al login
+                    return;
+                }
+
+                // Si es un Blob, procesarlo como imagen QR
+                let blob = response;
+                let url = URL.createObjectURL(blob);
+                let qr = document.querySelector('.credencial-qr');
+                qr.src = url;
+            })
+            .catch(error => {
+                console.error('Error al obtener la información del usuario:', error);
+            });
+    }
+
+    async function iniciarApp(){
+        if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+            await navigator.serviceWorker.ready;
+            console.log('Service Worker listo.');
+
+           await initializeApp();
         }
-        setStudentInformation(userInformation);
-    }).catch(error => {
-        console.error('Error al obtener la información del usuario:', error);
-    });
+    }
+   
+   
+
+    iniciarApp();
+
+    // Obtener información del usuario
+   
     
     // Imagen del estudiante
     function setStudentImg(numControl) {
@@ -195,26 +234,10 @@
 
         let respuesta = await request.blob();
 
-        return await request.blob();
+        return respuesta;
     }
 
-    getQr()
-        .then(response => {
-            // Si la respuesta es una URL (redirigir al login)
-            if (typeof response === 'string' && response.includes("/login")) {
-                window.location.href = response; // Redirigir al login
-                return;
-            }
-
-            // Si es un Blob, procesarlo como imagen QR
-            let blob = response;
-            let url = URL.createObjectURL(blob);
-            let qr = document.querySelector('.credencial-qr');
-            qr.src = url;
-        })
-        .catch(error => {
-            console.error('Error al obtener la información del usuario:', error);
-        });
+    
 
 </script>
 
@@ -267,12 +290,33 @@
     let btnLogout =document.getElementById('logout-btn');
 
     btnLogout.addEventListener('click', () => {
-        localStorage.removeItem('password');
-        localStorage.removeItem('usuario');
-        localStorage.removeItem('noControl');
+        cerrarSesion()
+        .then(response => {
+            // Si la respuesta es una URL (redirigir al login)
+            if (typeof response === 'string' && response.includes("/login")) {
+                window.location.href = response; // Redirigir al login
+                return;
+            }
 
-        window.location.href = '/login';
+        })
+        .catch(error => {
+                console.error('Error al cerrar sesion:', error);
+        });
     });
+
+    async function cerrarSesion() {
+        let url = new URL('https://idtec.websitos256.com/api/alumno/delete');
+        let request = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+
+        if (request.url.includes("/login")) {
+            return request.url;
+        }
+    }
 
 </script>
 
